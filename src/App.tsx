@@ -137,10 +137,14 @@ function App() {
   const items = state.order.map((id) => state.items[id]);
 
   return (
-    <div>
+    <div className="container">
       <h1>Min skoledag</h1>
 
-      <button type="button" onClick={() => setEditingMode(!editingMode)}>
+      <button
+        type="button"
+        className="edit-mode"
+        onClick={() => setEditingMode(!editingMode)}
+      >
         {editingMode ? "Done" : "Edit"}
       </button>
 
@@ -153,23 +157,27 @@ function App() {
         }}
         onDragEnd={handleDragEnd}
       >
-        <SortableContext items={items} strategy={verticalListSortingStrategy}>
-          {items.map((t) => (
-            <Todo
-              key={t.id}
-              id={t.id}
-              label={t.label}
-              done={t.done}
-              onDoneChange={() => handleDoneChange(t.id)}
-              onLabelChange={(label) => handleLabelChange(t.id, label)}
-              onDelete={() => handleDelete(t.id)}
-              editingMode={editingMode}
-            />
-          ))}
-        </SortableContext>
+        <div className="todo-list">
+          <SortableContext items={items} strategy={verticalListSortingStrategy}>
+            {items.map((t) => (
+              <Todo
+                key={t.id}
+                id={t.id}
+                label={t.label}
+                done={t.done}
+                onDoneChange={() => handleDoneChange(t.id)}
+                onLabelChange={(label) => handleLabelChange(t.id, label)}
+                onDelete={() => handleDelete(t.id)}
+                editingMode={editingMode}
+              />
+            ))}
+          </SortableContext>
+        </div>
       </DndContext>
 
-      <NewTodo onAdd={handleAdd} />
+      <div className="new-todo-container">
+        <NewTodo onAdd={handleAdd} />
+      </div>
     </div>
   );
 }
@@ -198,6 +206,8 @@ function NewTodo({ onAdd }: NewTodoProps) {
       value={label}
       onChange={(e) => setLabel(e.currentTarget.value)}
       onKeyDown={handleKeyDown}
+      className="todo__input"
+      placeholder="Tilføj ny opgave"
     />
   );
 }
@@ -240,12 +250,17 @@ function Todo({
 
       <input
         type="text"
+        className="todo__input"
         value={label}
         onChange={(e) => onLabelChange(e.target.value)}
       />
 
-      <div {...attributes} {...listeners}>
-        Drag
+      <div {...attributes} {...listeners} className="drag-handle">
+        <img
+          src="/drag-handle.svg"
+          alt="Drag handle"
+          className="drag-handle__icon"
+        />
       </div>
 
       {editingMode && (
