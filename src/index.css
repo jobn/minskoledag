@@ -103,6 +103,24 @@ body * {
   cursor: pointer;
 }
 
+.flush-state {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: "Varela Round", sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  border: 2px solid #C50022;
+  background: none;
+  color: #C50022;
+  border-radius: 8px;
+}
+
 .new-todo-container {
   margin-top: 24px;
   margin-left: 80px;

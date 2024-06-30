@@ -29,7 +29,7 @@ function App() {
     defaultValue: defaultState,
   });
 
-  const [editingMode, setEditingMode] = useState(false);
+  const [adminMode, setAdminMode] = useState(false);
 
   function handleDoneChange(id: string) {
     setState((state) => {
@@ -118,6 +118,10 @@ function App() {
     });
   }
 
+  function handleFlushState() {
+    setState(defaultState);
+  }
+
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
   const items = state.order.map((id) => state.items[id]);
@@ -129,8 +133,18 @@ function App() {
       <button
         type="button"
         className="edit-mode"
-        onClick={() => setEditingMode(!editingMode)}
+        onClick={() => setAdminMode(!adminMode)}
       />
+
+      {adminMode && (
+        <button
+          type="button"
+          className="flush-state"
+          onClick={handleFlushState}
+        >
+          Reset
+        </button>
+      )}
 
       <DndContext
         sensors={sensors}
@@ -152,7 +166,7 @@ function App() {
                 onDoneChange={() => handleDoneChange(t.id)}
                 onLabelChange={(label) => handleLabelChange(t.id, label)}
                 onDelete={() => handleDelete(t.id)}
-                editingMode={editingMode}
+                editingMode={adminMode}
               />
             ))}
           </SortableContext>
