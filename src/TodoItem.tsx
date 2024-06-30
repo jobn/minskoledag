@@ -70,7 +70,7 @@ export function TodoItem({
 
       <div {...attributes} {...listeners} className="drag-handle">
         <img
-          src="/drag-handle.svg"
+          src="/assets/drag-handle.svg"
           alt="Drag handle"
           className="drag-handle__icon"
         />
