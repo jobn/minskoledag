@@ -138,15 +138,13 @@ function App() {
 
   return (
     <div className="container">
-      <h1>Min skoledag</h1>
+      <h1 className="header">Min skoledag</h1>
 
       <button
         type="button"
         className="edit-mode"
         onClick={() => setEditingMode(!editingMode)}
-      >
-        {editingMode ? "Done" : "Edit"}
-      </button>
+      />
 
       <DndContext
         sensors={sensors}
@@ -207,7 +205,7 @@ function NewTodo({ onAdd }: NewTodoProps) {
       onChange={(e) => setLabel(e.currentTarget.value)}
       onKeyDown={handleKeyDown}
       className="todo__input"
-      placeholder="Tilføj ny opgave"
+      placeholder="Tilføj"
     />
   );
 }
@@ -245,7 +243,30 @@ function Todo({
   return (
     <div ref={setNodeRef} style={style} className="todo">
       <label>
-        <input type="checkbox" checked={done} onChange={onDoneChange} />
+        <input type="checkbox" hidden checked={done} onChange={onDoneChange} />
+
+        {done ? (
+          <svg
+            className="checkmark"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 52 52"
+          >
+            <circle
+              className="checkmark__circle"
+              cx="26"
+              cy="26"
+              r="25"
+              fill="none"
+            />
+            <path
+              className="checkmark__check"
+              fill="none"
+              d="M14.1 27.2l7.1 7.2 16.7-16.8"
+            />
+          </svg>
+        ) : (
+          <div className="checkmark__unchecked" />
+        )}
       </label>
 
       <input
@@ -264,7 +285,7 @@ function Todo({
       </div>
 
       {editingMode && (
-        <button type="button" onClick={onDelete}>
+        <button type="button" className="todo__delete" onClick={onDelete}>
           X
         </button>
       )}
