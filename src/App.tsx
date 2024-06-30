@@ -11,31 +11,17 @@ import {
 import {
   SortableContext,
   arrayMove,
-  useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { useState } from "react";
 import useLocalStorageState from "use-local-storage-state";
-
-type Todo = {
-  id: string;
-  label: string;
-  done: boolean;
-};
-
-type State = {
-  items: Record<string, Todo>;
-  order: string[];
-};
+import { NewTodo } from "./NewTodo";
+import { TodoItem } from "./TodoItem";
+import type { State } from "./types";
 
 const defaultState: State = {
-  items: {
-    "1": { id: "1", label: "Matematik", done: true },
-    "2": { id: "2", label: "Spise", done: false },
-    "3": { id: "3", label: "Have det rigtig sjovt", done: false },
-  },
-  order: ["1", "2", "3"],
+  items: {},
+  order: [],
 };
 
 function App() {
@@ -158,7 +144,7 @@ function App() {
         <div className="todo-list">
           <SortableContext items={items} strategy={verticalListSortingStrategy}>
             {items.map((t) => (
-              <Todo
+              <TodoItem
                 key={t.id}
                 id={t.id}
                 label={t.label}
@@ -181,114 +167,3 @@ function App() {
 }
 
 export default App;
-
-type NewTodoProps = {
-  onAdd: (label: string) => void;
-};
-function NewTodo({ onAdd }: NewTodoProps) {
-  const [label, setLabel] = useState("");
-
-  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      e.stopPropagation();
-
-      onAdd(label);
-      setLabel("");
-    }
-  }
-
-  return (
-    <input
-      type="text"
-      value={label}
-      onChange={(e) => setLabel(e.currentTarget.value)}
-      onKeyDown={handleKeyDown}
-      className="todo__input"
-      placeholder="Tilføj"
-    />
-  );
-}
-
-type TodoProps = {
-  id: Todo["id"];
-  label: Todo["label"];
-  done: Todo["done"];
-  onDoneChange: () => void;
-  onLabelChange: (label: string) => void;
-  onDelete: () => void;
-  editingMode: boolean;
-};
-
-function Todo({
-  id,
-  label,
-  done,
-  onDoneChange,
-  onLabelChange,
-  onDelete,
-  editingMode,
-}: TodoProps) {
-  const { attributes, listeners, setNodeRef, transform } = useSortable({
-    id,
-    transition: null,
-  });
-
-  const style = {
-    transform: CSS.Transform.toString(
-      transform ? { ...transform, scaleX: 1, scaleY: 1 } : null,
-    ),
-  };
-
-  return (
-    <div ref={setNodeRef} style={style} className="todo">
-      <label>
-        <input type="checkbox" hidden checked={done} onChange={onDoneChange} />
-
-        {done ? (
-          <svg
-            className="checkmark"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 52 52"
-          >
-            <circle
-              className="checkmark__circle"
-              cx="26"
-              cy="26"
-              r="25"
-              fill="none"
-            />
-            <path
-              className="checkmark__check"
-              fill="none"
-              d="M14.1 27.2l7.1 7.2 16.7-16.8"
-            />
-          </svg>
-        ) : (
-          <div className="checkmark__unchecked" />
-        )}
-      </label>
-
-      <input
-        type="text"
-        className="todo__input"
-        value={label}
-        onChange={(e) => onLabelChange(e.target.value)}
-      />
-
-      <div {...attributes} {...listeners} className="drag-handle">
-        <img
-          src="/drag-handle.svg"
-          alt="Drag handle"
-          className="drag-handle__icon"
-        />
-      </div>
-
-      {editingMode && (
-        <button type="button" className="todo__delete" onClick={onDelete}>
-          X
-        </button>
-      )}
-    </div>
-  );
-}
